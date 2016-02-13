@@ -36,7 +36,7 @@ def buggy(request):
 def raise_500(request):
     if request.method == 'POST':
         logger.info(request)
-        return HttpResonse('Please check logs for password!')
+        return HttpResponse('Please check logs for password!')
     Table.objects.all()[-1]
     return HttpResponse('Fun with Logging!')
 
