@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^500/?$', 'logging_fun.views.raise_500', ),
     url(r'^delay/?$', 'logging_fun.views.delay', ),
     url(r'^db/?$', 'logging_fun.views.hit_db', ),
+    url(r'^springboard/?$', 'logging_fun.views.springboard', ),
     url(r'^unconfigured/', include('unconfigured.urls', namespace='unconfigured')),
 )

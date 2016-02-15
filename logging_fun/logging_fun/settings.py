@@ -34,8 +34,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # Host for sending e-mail.
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'rt.indru@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = ''  # Your gmail ID here
+EMAIL_HOST_PASSWORD = ''  # Your gmail password here
 EMAIL_USE_TLS = True
 
 # Application definition
@@ -101,69 +101,25 @@ STATIC_URL = '/static/'
 DJANGO_LOG_LEVEL = DEBUG
 
 LOGGING = {
+    # Step 9:: Formatters
+    # Step 10:: Filters
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            # 'formatter': 'simple',
-        },
-        'root_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/root_file_handler.log',
-            # 'formatter': 'verbose',
-        },
-        'django_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/django_file_handler.log',
-            # 'formatter': 'verbose',
-        },
-        'app_file': {
-            'level': 'DEBUG',
-            # 'level': 'INFO',  # Step 2 - Handler Split
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/app_file_handler.log',
-            # 'formatter': 'verbose',
-            'filters': ['filter_passwords'],
-        },
-        'debug_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/debug.log',
-            # 'formatter': 'simple',
-        },
-        'error_file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/exception.log',
-            # 'formatter': 'verbose',
-            # 'filters': ['filter_passwords'],
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            # 'filters': ['require_debug_false'],
-            'include_html': True,
-        }
-    },
-    'root': {  # Step 5 - Catch All
-        'handlers': ['root_file', 'error_file', ],  #'mail_admins'],  # Step 7 - Errors
+    'root': {  # Step 6 - Catch All (unconfigured)
+        'handlers': ['root_file',  'error_file', 'mail_admins'],  # Step 7 - Errors Mail & File
         'level': 'DEBUG',
     },
     'loggers': {
         'logging_fun': {
-            'handlers': ['app_file', 'console', 'error_file'],  # Step 2 - Handler Splits
+            'handlers': ['app_file', 'console', ],  # Step 2 - Handler Splits
             'level': 'DEBUG',  # Step 1 - Normal Logging
-            # 'level': 'INFO',  # Step 3 - Info Level Skips
+            # 'level': 'INFO',  # Step 3 - Handler Info Level Skips
             'propagate': True,
         },
         'logging_fun.buggy_module': {  # Step 4 - App level splits
             'handlers': ['debug_file'],
             'level': 'DEBUG',
-            'propagate': True,  # Step 6 - Propagation
+            'propagate': True,  # Step 5 - Propagation
         },
         'django.request': {  # Step 8 - Django Request/Template/DB
             'handlers': ['django_file'],
@@ -176,14 +132,60 @@ LOGGING = {
             'propagate': True,
         },
     },
-    # 'formatters': {  # Step 9 - Formatters
-    #     'verbose': {
-    #         'format': '%(levelname)s %(asctime)s %(process)d %(thread)d %(module)s %(lineno)d :: %(message)s'
-    #     },
-    #     'simple': {
-    #         'format': '%(levelname)s :: %(message)s'
-    #     },
-    # },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'root_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/root_file_handler.log',
+            'formatter': 'verbose',
+        },
+        'django_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/django_file_handler.log',
+            'formatter': 'verbose',
+        },
+        'app_file': {
+            # 'level': 'DEBUG',
+            'level': 'INFO',  # Step s2 - Handler Split
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/app_file_handler.log',
+            'formatter': 'verbose',
+            'filters': ['filter_passwords'],
+        },
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/debug.log',
+            'formatter': 'simple',
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/exception.log',
+            'formatter': 'verbose',
+            'filters': ['require_debug_false', 'filter_passwords'],
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+            'include_html': True,
+        }
+    },
+    'formatters': {  # Step 9 - Formatters
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(process)d %(thread)d %(module)s %(lineno)d :: %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s :: %(message)s'
+        },
+    },
     'filters': {  # Step 10  - Filters
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse',
